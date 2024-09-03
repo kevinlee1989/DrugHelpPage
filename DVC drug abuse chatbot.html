@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drug Abuse Diagnosis Chatbot</title>
+  <style>
+    #chat-container {
+      height: 300px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    #user-input {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container"></div>
+  <div id="user-input">
+    <button onclick="startDiagnosis()">Start</button>
+    <input type="text" id="user-answer" placeholder="Type your answer...">
+    <button onclick="answerQuestion()">Submit</button>
+  </div>
+
+  <script>
+    var questionIndex = 0;
+    var answers = [];
+    var chatContainer = document.getElementById('chat-container');
+
+    var questions = [
+      "Have you used drugs other than those used for medical reasons?",
+      "Have you abused prescription drugs?",
+      "Do you abuse more than one drug at a time?",
+      "Can you get through the week without using drugs?",
+      "Are you always able to stop using drugs when you want to?",
+      "Have you had 'blackouts' or 'flashbacks' as a result of drug use?",
+      "Do you ever feel bad or guilty about your drug use?",
+      "Does your spouse (or parents) ever complain about your involvement with drugs?",
+      "Has drug abuse created problems between you and your spouse or your parents?",
+      "Have you lost friends because of your use of drugs?",
+      "Have you neglected your family because of your use of drugs?",
+      "Have you been in trouble at work because of drug abuse?",
+      "Have you lost a job because of drug abuse?",
+      "Have you gotten into fights when under the influence of drugs?",
+      "Have you engaged in illegal activities in order to obtain drugs?",
+      "Have you been arrested for possession of illegal drugs?",
+      "Have you ever experienced withdrawal symptoms when you stop taking drugs?",
+      "Have you had medical problems as a result of drug use (e.g., memory loss, hepatitis, convulsions, bleeding, etc.)?",
+      "Have you gone to anyone for help for a drug problem?",
+      "Have you been involved in a treatment program specifically related to drug use?"
+    ];
+
+    function startDiagnosis() {
+      displayMessage('Chatbot', 'Welcome! There would be 20 questions about your drug abuse.');
+      document.getElementById('user-input').style.display = 'flex'; // Show input and submit buttons
+      displayNextQuestion();
+    }
+
+    function displayNextQuestion() {
+      if (questionIndex < questions.length) {
+        var question = questions[questionIndex];
+        displayMessage('Chatbot', question);
+      } else {
+        // All questions answered, provide diagnosis
+        provideDiagnosis();
+      }
+    }
+
+    function provideDiagnosis() {
+      var diagnosis = getDiagnosis();
+      displayMessage('Chatbot', 'Diagnosis: ' + diagnosis);
+      document.getElementById('user-input').style.display = 'none'; // Hide input and submit buttons after diagnosis
+    }
+
+    function answerQuestion() {
+      var userAnswer = document.getElementById('user-answer').value;
+      displayMessage('User', userAnswer);
+      processUserAnswer(userAnswer);
+      questionIndex++;
+      document.getElementById('user-answer').value = ''; // Clear the input field
+      displayNextQuestion();
+    }
+
+    function processUserAnswer(answer) {
+      answers.push(answer.toLowerCase());
+    }
+
+    function getDiagnosis() {
+      var yesAnswers = answers.filter(answer => answer === 'yes').length;
+
+      if (yesAnswers >= 15) {
+        return "You are in highly danger.";
+      } else if (yesAnswers >= 10) {
+        return "You are in danger.";
+      } else if (yesAnswers >= 5) {
+        return "You should be careful.";
+      } else {
+        return "It's a good time to stop using drugs.";
+      }
+    }
+
+    function displayMessage(sender, message) {
+      var newMessage = document.createElement('div');
+      newMessage.innerHTML = '<strong>' + sender + ':</strong> ' + message;
+      chatContainer.appendChild(newMessage);
+      chatContainer.scrollTop = chatContainer.scrollHeight; // Auto-scroll to the bottom
+    }
+  </script>
+</body>
+</html>
